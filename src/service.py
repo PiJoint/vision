@@ -37,7 +37,8 @@ def pose(img0, depth, box):
         #   - GET YAW
         cx,cy = x+ ( (x1-x) // 2), y+ ((y1-y)//2)
         px,py,pz = pixel2cloud(point_cloud, cx,cy)
-
+        print("CAMERA", px, py,pz)
+        print("ROBOT: ", trw(px,py,pz))
         return Pose(
             Point(*trw(px,py,pz)),
             Rotation(0, 0, 0)
