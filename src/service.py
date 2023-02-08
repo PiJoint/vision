@@ -39,7 +39,7 @@ def pose(img0, depth, box):
         px,py,pz = pixel2cloud(point_cloud, cx,cy)
 
         return Pose(
-            Point(trw(px,py,pz)),
+            Point(*trw(px,py,pz)),
             Rotation(0, 0, 0)
         )
 

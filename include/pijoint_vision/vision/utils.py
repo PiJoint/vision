@@ -10,7 +10,9 @@ tau = np.array([-0.5, 0.35,1.8],
 
 
 def trw(*vec):
-    return ro.dot(np.array(vec).reshape((3,1))) + tau
+    t = ro.dot(np.array(vec).reshape((3,1))) + tau
+
+    return t.reshape(3,1)
 
 
 
