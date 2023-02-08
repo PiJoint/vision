@@ -7,6 +7,7 @@ import rospy
 
 from cv_bridge import CvBridge, CvBridgeError
 from pijoint_vision.ai import Model
+from pijoint_vision.vision import pixel2cloud
 
 
 bridge = CvBridge()
