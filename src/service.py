@@ -10,6 +10,7 @@ from math import sqrt
 from cv_bridge import CvBridge, CvBridgeError
 from pijoint_vision.ai import Model
 from pijoint_vision.vision import pixel2cloud
+from pijoint_vision.vision.utils import trw
 
 
 bridge = CvBridge()
@@ -38,7 +39,7 @@ def pose(img0, depth, box):
         px,py,pz = pixel2cloud(point_cloud, cx,cy)
 
         return Pose(
-            Point(px,py,pz),
+            Point(trw(px,py,pz)),
             Rotation(0, 0, 0)
         )
 
