@@ -24,7 +24,7 @@ def init():
 
     ts = message_filters.TimeSynchronizer([image_sub, depth_sub, point_sub], 10)
 
-    ts.registerCallback(lambda image, depth: synchro.publish(image, depth))
+    ts.registerCallback(lambda image, depth, point_cloud: synchro.publish(image, depth, point_cloud))
 
 
     
