@@ -1,0 +1,2 @@
+geometry_msgs/Point center
+pijoint_vision/Rotation rotation

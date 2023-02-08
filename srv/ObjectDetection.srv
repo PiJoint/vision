@@ -1,0 +1,4 @@
+bool detect
+---
+bool success
+pijoint_vision/Object[] objects
