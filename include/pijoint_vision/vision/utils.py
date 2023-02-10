@@ -15,7 +15,6 @@ def trw(*vec):
     return t.reshape(3,1)
 
 
-
 if __name__ == '__main__':
     # TEST
 

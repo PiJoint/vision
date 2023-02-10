@@ -8,9 +8,11 @@ import cv2
 from math import sqrt
 
 from cv_bridge import CvBridge, CvBridgeError
+
 from pijoint_vision.ai import Model
-from pijoint_vision.vision import pixel2cloud
+from pijoint_vision.vision import pixel2cloud, angle
 from pijoint_vision.vision.utils import trw
+
 
 
 bridge = CvBridge()
@@ -19,7 +21,7 @@ classifier = Model('src/best.pt', 0.30)
 up_classifier = Model('src/up_and_down.pt', 0.50)
 
 
-def pose(img0, depth, box):
+def pose(img0, ob_c, depth, box):
 
     depth, point_cloud = depth
     x,y,x1,y1  = box
@@ -27,21 +29,20 @@ def pose(img0, depth, box):
 
     cropped = img0[int(y):int(y1), int(x):int(x1)]
     ob = up_classifier.detect_object(cropped)
-    # TODO get bigger box
-
+ 
     for o in ob:
         c, _ = o
-
-        # TODO opencv2
-        #   - GET CENTER
-        #   - GET YAW
-        cx,cy = x+ ( (x1-x) // 2), y+ ((y1-y)//2)
+        
+        (cx, cy), angle = angle(img0, ob_c)
         px,py,pz = pixel2cloud(point_cloud, cx,cy)
-        print("CAMERA", px, py,pz)
-        print("ROBOT: ", trw(px,py,pz))
+
+        # TODO 
+        # - get pitch
+        # - get roll
+
         return Pose(
             Point(*trw(px,py,pz)),
-            Rotation(0, 0, 0)
+            Rotation(angle, 0, 0)
         )
 
 
@@ -70,7 +71,7 @@ def object_detection(req):
             c, (x,y,x1,y1) = o
             rospy.loginfo("Found %d" % c)
 
-            rotation = pose(left, (depth, point_cloud), (x,y,x1,y1))
+            rotation = pose(left, c, (depth, point_cloud), (x,y,x1,y1))
           
             objects.append(
                 Object(c, rotation)
