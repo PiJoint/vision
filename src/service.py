@@ -59,7 +59,7 @@ def object_detection(req):
         cv2.resize(left,(1920,1080))
 
     except CvBridgeError as e:
-        return ObjectDetectionResponse(False, [])
+        return ObjectDetectionResponse(False,0, [])
     else:
         # DETECT AND PUBLISH
         objects = []
@@ -75,7 +75,7 @@ def object_detection(req):
             objects.append(
                 Object(c, rotation)
             )
-    return ObjectDetectionResponse(True, objects)
+    return ObjectDetectionResponse(True,len(objects), objects)
             
 
 def init():
