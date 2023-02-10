@@ -5,6 +5,7 @@ from pijoint_vision.msg import RGBD, Object,Pose,Rotation
 from geometry_msgs.msg import Point
 import rospy
 import cv2
+import numpy as np
 from math import sqrt
 
 from cv_bridge import CvBridge, CvBridgeError
@@ -17,7 +18,7 @@ from pijoint_vision.vision.utils import trw
 
 bridge = CvBridge()
 
-classifier = Model('src/best.pt', 0.30)
+classifier = Model('src/best.pt', 0.70)
 up_classifier = Model('src/up_and_down.pt', 0.50)
 
 
@@ -33,16 +34,19 @@ def pose(img0, ob_c, depth, box):
     for o in ob:
         c, _ = o
         
-        (cx, cy), angle = angle(img0, ob_c)
+        (cx, cy), yaw = angle(img0, ob_c)
         px,py,pz = pixel2cloud(point_cloud, cx,cy)
+        print(cx,cy, depth[cy,cx], px,py,pz)
 
+
+        
         # TODO 
         # - get pitch
         # - get roll
 
         return Pose(
             Point(*trw(px,py,pz)),
-            Rotation(angle, 0, 0)
+            Rotation(yaw, 0, 0)
         )
 
 
