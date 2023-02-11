@@ -69,5 +69,11 @@ def angle(img, cl):
         angle = 180 + angle
     # TODO pythonic refactor
 
+    if angle > 90:
+        angle -=90
+    
+    else:
+        angle +=90
+
     return center, np.deg2rad(angle)
 
