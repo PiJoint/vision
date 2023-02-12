@@ -34,9 +34,10 @@ def pose(img0, ob_c, depth, box):
         c, _ = o
         
         (cx, cy), yaw = angle(cropped, ob_c)
-        px,py,pz = pixel2cloud(point_cloud, cx,cy)
 
-        rospy.loginfo("\tCenter/Angle %d %d %d %f" % (px,py,pz,yaw))
+        px,py,pz = pixel2cloud(point_cloud, cx+x,cy+y)
+
+        rospy.loginfo("\tCenter/Angle %f %f %f %f" % (px,py,pz,yaw))
              
         # TODO 
         # - get pitch
