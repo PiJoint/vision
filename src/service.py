@@ -33,7 +33,7 @@ def pose(img0, ob_c, depth, box):
     for o in ob:
         c, _ = o
         
-        (cx, cy), yaw = angle(img0, ob_c)
+        (cx, cy), yaw = angle(cropped, ob_c)
         px,py,pz = pixel2cloud(point_cloud, cx,cy)
              
         # TODO 
@@ -43,7 +43,7 @@ def pose(img0, ob_c, depth, box):
         return Pose(
             Point(*trw(px,py,pz)),
             Rotation(yaw, 0, 0)
-        )
+        ), cropped
 
 
 def object_detection(req):
@@ -71,9 +71,9 @@ def object_detection(req):
             c, (x,y,x1,y1) = o
             rospy.loginfo("Found %d" % c)
 
-            rotation = pose(left, c, (depth, point_cloud), (x,y,x1,y1))
+            rotation, cropped = pose(left, c, (depth, point_cloud), (x,y,x1,y1))
             objects.append(
-                Object(c, rotation, rgbd.image, bridge.cv2_to_imgmsg(left))
+                Object(c, rotation, rgbd.image, bridge.cv2_to_imgmsg(cropped))
             )
     return ObjectDetectionResponse(True,len(objects), objects)
             
