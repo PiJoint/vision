@@ -35,10 +35,7 @@ def pose(img0, ob_c, depth, box):
         
         (cx, cy), yaw = angle(img0, ob_c)
         px,py,pz = pixel2cloud(point_cloud, cx,cy)
-        print(cx,cy, depth[cy,cx], px,py,pz)
-
-
-        
+             
         # TODO 
         # - get pitch
         # - get roll
@@ -75,9 +72,8 @@ def object_detection(req):
             rospy.loginfo("Found %d" % c)
 
             rotation = pose(left, c, (depth, point_cloud), (x,y,x1,y1))
-          
             objects.append(
-                Object(c, rotation)
+                Object(c, rotation, rgbd.image, bridge.cv2_to_imgmsg(left))
             )
     return ObjectDetectionResponse(True,len(objects), objects)
             

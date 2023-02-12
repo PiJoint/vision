@@ -47,14 +47,15 @@ def getOrientation(pts, img):
     ## [pca]
 
     index  = np.argmax(eigenvalues)
-    angle = math.atan(eigenvectors[index, 1]/eigenvectors[index, 0])  # orientation in radians
+    angle = math.atan((-eigenvectors[index, 1])/eigenvectors[index, 0])  # orientation in radians
 
+    drawAxis(img, cntr, (cntr[0] + 0.02 * eigenvectors[index, 0] * eigenvalues[index, 0], cntr[1] + 0.02 * eigenvectors[index, 1] * eigenvalues[index, 0]), (255, 255, 0), 1)
+    
     return cntr, angle
 
 
 
-def mask(img, cl):
-    original = img.copy()   
+def mask(img, cl): 
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     lower = np.array([0, SMIN_VALUE.get(cl, 170), 0])
     upper = np.array([179, 255, 255])
