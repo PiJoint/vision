@@ -21,7 +21,6 @@ bridge = CvBridge()
 classifier = Model('src/best.pt', 0.70)
 up_classifier = Model('src/up_and_down.pt', 0.50)
 
-
 def pose(img0, ob_c, depth, box):
 
     depth, point_cloud = depth
