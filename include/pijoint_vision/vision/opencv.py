@@ -47,8 +47,9 @@ def getOrientation(pts, img):
     ## [pca]
 
     index  = np.argmax(eigenvalues)
-    angle = math.atan((-eigenvectors[index, 1])/eigenvectors[index, 0])  # orientation in radians
-
+    angle = math.atan2(-eigenvectors[index, 1], eigenvectors[index, 0])  # orientation in radiants
+    if angle < 0:
+        angle = -(math.pi + angle)
     drawAxis(img, cntr, (cntr[0] + 0.02 * eigenvectors[index, 0] * eigenvalues[index, 0], cntr[1] + 0.02 * eigenvectors[index, 1] * eigenvalues[index, 0]), (255, 255, 0), 1)
     
     return cntr, angle

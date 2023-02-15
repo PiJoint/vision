@@ -18,7 +18,7 @@ from pijoint_vision.vision.utils import trw
 
 bridge = CvBridge()
 
-classifier = Model('src/best.pt', 0.70)
+classifier = Model('src/last.pt', 0.70)
 up_classifier = Model('src/up_and_down.pt', 0.50)
 
 def pose(img0, ob_c, depth, box):
@@ -29,24 +29,24 @@ def pose(img0, ob_c, depth, box):
 
     cropped = img0[int(y):int(y1), int(x):int(x1)]
     ob = up_classifier.detect_object(cropped)
- 
+    
+    pitch = 0
+    roll = 0
     for o in ob:
         c, _ = o
-        
-        (cx, cy), yaw = angle(cropped, ob_c)
-
-        px,py,pz = pixel2cloud(point_cloud, cx+x,cy+y)
-
-        rospy.loginfo("\tCenter/Angle %f %f %f %f" % (px,py,pz,yaw))
-             
         # TODO 
         # - get pitch
         # - get roll
+        
+    (cx, cy), yaw = angle(cropped, ob_c)
+    px,py,pz = pixel2cloud(point_cloud, cx+x,cy+y)
 
-        return Pose(
-            Point(*trw(px,py,pz)),
-            Rotation(yaw, 0, 0)
-        ), cropped
+    rospy.loginfo("\tCenter/Angle %f %f %f %f" % (px,py,pz,yaw))
+        
+    return Pose(
+        Point(*trw(px,py,pz)),
+        Rotation(yaw, pitch, roll)
+    ), cropped
 
 
 def object_detection(req):
