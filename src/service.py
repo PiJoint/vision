@@ -7,6 +7,8 @@ import rospy
 import cv2
 import numpy as np
 from math import sqrt
+import sys
+from yolov7 import models
 
 from cv_bridge import CvBridge, CvBridgeError
 
@@ -14,7 +16,7 @@ from pijoint_vision.ai import Model
 from pijoint_vision.vision import pixel2cloud, angle
 from pijoint_vision.vision.utils import trw
 
-
+sys.modules['models'] = models
 
 bridge = CvBridge()
 
