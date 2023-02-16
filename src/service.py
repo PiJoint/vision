@@ -1,4 +1,4 @@
-
+import sys
 from functools import partial
 from pijoint_vision.srv import ObjectDetection,ObjectDetectionResponse
 from pijoint_vision.msg import RGBD, Object,Pose,Rotation
@@ -7,6 +7,7 @@ import rospy
 import cv2
 import numpy as np
 from math import sqrt
+from yolov7 import models
 
 from cv_bridge import CvBridge, CvBridgeError
 
@@ -15,6 +16,7 @@ from pijoint_vision.vision import pixel2cloud, angle
 from pijoint_vision.vision.utils import trw
 
 
+sys.modules['models'] = models
 
 bridge = CvBridge()
 
