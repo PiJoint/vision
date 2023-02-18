@@ -1,3 +1,14 @@
+#!/usr/bin/env python
+"""
+
+    This file is part of PiJoint.
+
+    @package Vision
+    @author: Alessandro Mizzaro
+    @contact:
+    @version: 1.0.0
+
+"""
 import sys
 from functools import partial
 import rospy
@@ -21,12 +32,31 @@ sys.modules['models'] = models
 
 bridge = CvBridge()
 
+rospy.loginfo("Loading models...")
+
 classifier = Model('src/models/last.pt', 0.70)
 up_classifier = Model('src/models/up_and_down.pt', 0.30)
 
+rospy.loginfo("Fused...")
 
-def group_position(img):
+
+def ground_position(img):
+    """
+    Return the position of the block
+      - 0 if it is on the side
+      - 1 if it is "naturally" on the ground
+
+    @param img: image of the object
+    @return: int
+    """
+
     def area(x,y):
+        """
+        Return the area of the polygon defined by the points
+        @param x: list of x coordinates
+        @param y: list of y coordinates
+        @return: float
+        """
         return float(0.5*np.abs(np.dot(x,np.roll(y,1))-np.dot(y,np.roll(x,1))))
     
     ob = up_classifier.detect_object(img)
@@ -42,10 +72,20 @@ def group_position(img):
 
 
 def pose(img, ob_c, point_cloud, box):
+    """
+    Return the pose of the object
+
+    @param img: image of the object
+    @param ob_c: class of the object
+    @param point_cloud: point cloud of the scene
+    @param box: bounding box of the object
+    @return: Pose
+    """
+
     x,y,x1,y1  = box
 
     cropped = img[int(y):int(y1), int(x):int(x1)]
-    blok = MegaBloks(cropped, (ob_c, group_position(cropped)))
+    blok = MegaBloks(cropped, (ob_c, ground_position(cropped)))
 
     (cx, cy) = blok.center
     (tx, ty) = blok.piolini
@@ -58,6 +98,10 @@ def pose(img, ob_c, point_cloud, box):
 
 
 def object_detection(req):
+    """
+    Service callback
+    """
+
     rospy.loginfo("Starting detection...")
     rgbd = rospy.wait_for_message('/pjoint/_internal/camera', RGBD)
     
@@ -87,10 +131,11 @@ def object_detection(req):
             
 
 def init():
-    rospy.loginfo("Loading models...")
-
-  
-    rospy.loginfo("Fused...")
+    """
+        Init function
+        Load listner and services
+    """
+   
 
     rospy.loginfo("Loading services...")
     rospy.Service('object_detection', ObjectDetection,object_detection)

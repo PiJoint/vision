@@ -22,10 +22,10 @@ def read_floats(msg, start, len=12):
 
 
 def pixel2cloud(point_cloud: PointCloud2, x: int, y: int):
-    
+    """
+    Implementations of point_cloud2.read_points
+    """
     array_position = y * point_cloud.row_step + x * point_cloud.point_step
-
-
     data = read_floats(point_cloud, array_position)
 
     return \

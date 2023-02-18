@@ -13,7 +13,9 @@ from yolov7.utils.general import check_img_size,   non_max_suppression,  \
 from .images import LoadImage
 
 class Model:
-
+    """
+    Yolov7 model implementation
+    """
 
     def __init__(self, w, tresh, device='', augment=False) -> None:
         self.augment = augment
@@ -38,6 +40,11 @@ class Model:
 
 
     def detect_object(self, source):
+        """
+        Detect object in image
+        @param source: image path
+        @return: list of detected objects
+        """
         ob = []
 
         dataset = LoadImage(source, img_size=self.imgsz, stride=self.stride)

@@ -19,6 +19,9 @@ else:
 
 
 def trw(*vec):
+    """
+    Rotational matrix from camera to robot frame
+    """
     t = ro.dot(np.array(vec).reshape((3,1))) + tau
 
     return t.reshape(3,1)

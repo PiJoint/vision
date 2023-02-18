@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+"""
+
+    This file is part of PiJoint.
+
+    @package Vision
+    @author: Alessandro Mizzaro
+    @contact:
+    @version: 1.0.0
+
+    OpenCV utils
+"""
 from math import atan2, cos, pi, sin, sqrt
 import math
 import cv2
@@ -18,6 +30,13 @@ class Ground(IntEnum):
 
 
 def mask(img, hsvs): 
+    """
+    Return the mask of the image. The mask is the image with only the color of the object
+    @param img: image
+    @param hsvs: hsv values
+    @return: mask
+
+    """
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     lower = np.array([hsvs[0], hsvs[1], hsvs[2]])
     upper = np.array([179, 255, 255])
@@ -25,6 +44,14 @@ def mask(img, hsvs):
 
 
 def drawAxis(img, p_, q_, colour, scale):
+    """
+    Utils function to draw an arrow with eigenvalues and eigenvectors. In place edit
+    @param img: image
+    @param p_: point
+    @param q_: point
+    @param colour: color
+    @param scale: scale
+    """
     p = list(p_)
     q = list(q_)
     
@@ -45,6 +72,10 @@ def drawAxis(img, p_, q_, colour, scale):
 
 
 class MegaBloks:
+    """
+    Class to manage the MegaBloks
+
+    """
 
     _TEMPLATE = os.path.dirname(__file__) + '/templates/piolino.jpg'
 
@@ -64,6 +95,10 @@ class MegaBloks:
 
     
     def _calc_orientation(self):
+        """
+        Calculate the yaw angle of the object with mask and PCA method
+
+        """
         pts = self.cnt
         sz = len(pts)
         data_pts = np.empty((sz, 2), dtype=np.float64)
@@ -85,6 +120,10 @@ class MegaBloks:
         self.center = (int(mean[0, 0]), int(mean[0, 1]))
 
     def sift(self):
+        """
+        Calculate the skeleton of the object with SIFT method
+
+        """
         template = cv2.imread(self._TEMPLATE)
         sift = cv2.xfeatures2d.SIFT_create()
 
@@ -103,16 +142,15 @@ class MegaBloks:
         for match in matches:
             x, y = o_keypoint[match.trainIdx].pt
             self.skeleton.append((x,y))
-           
-
-    @property
-    def piolini(self):
-        return list(map(int, np.mean(self.skeleton, axis=0)))
-           
+        
+        self.piolini = list(map(int, np.mean(self.skeleton, axis=0)))
         
     
     @property
     def debug_image(self):
+        """
+        Return the debug image with the skeleton and the orientation
+        """
         img = self.img.copy()
         cntr = self.center
 
