@@ -75,7 +75,7 @@ class Model:
                         label = f'{self.names[int(cls)]} {conf:.2f}'
                         x, y,x1,y1 = xyxy
                         ob.append(
-                            (int(cls), (int(x), int(y), int(x1), int(y1)))
+                            (int(cls), (int(x), int(y), int(x1), int(y1)), conf)
                         )
             break
         return ob

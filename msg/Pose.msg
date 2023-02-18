@@ -1,2 +1,4 @@
 geometry_msgs/Point center
-pijoint_vision/Rotation rotation
+geometry_msgs/Point piolini
+float64 yaw
+bool ground
