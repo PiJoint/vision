@@ -1,13 +1,11 @@
 #!/usr/bin/env python
-"""
+"""!
 
     This file is part of PiJoint.
 
-    @package Vision
+    @package src
     @author: Alessandro Mizzaro
-    @contact:
     @version: 1.0.0
-
 """
 import sys
 from functools import partial
@@ -30,18 +28,21 @@ from pijoint_vision.vision.utils import trw
 
 sys.modules['models'] = models
 
-bridge = CvBridge()
+## CvBridge object
+bridge = CvBridge() 
 
 rospy.loginfo("Loading models...")
 
-classifier = Model('src/models/last.pt', 0.70)
-up_classifier = Model('src/models/up_and_down.pt', 0.30)
+## Blok classifier
+classifier = Model('src/models/last.pt', 0.70) 
+## Ground classifier
+up_classifier = Model('src/models/up_and_down.pt', 0.30) 
 
 rospy.loginfo("Fused...")
 
 
 def ground_position(img):
-    """
+    """!
     Return the position of the block
       - 0 if it is on the side
       - 1 if it is "naturally" on the ground
@@ -51,7 +52,7 @@ def ground_position(img):
     """
 
     def area(x,y):
-        """
+        """!
         Return the area of the polygon defined by the points
         @param x: list of x coordinates
         @param y: list of y coordinates
@@ -72,7 +73,7 @@ def ground_position(img):
 
 
 def pose(img, ob_c, point_cloud, box):
-    """
+    """!
     Return the pose of the object
 
     @param img: image of the object
@@ -98,7 +99,7 @@ def pose(img, ob_c, point_cloud, box):
 
 
 def object_detection(req):
-    """
+    """!
     Service callback
     """
 
@@ -131,7 +132,7 @@ def object_detection(req):
             
 
 def init():
-    """
+    """!
         Init function
         Load listner and services
     """

@@ -1,14 +1,12 @@
 #!/usr/bin/env python
-"""
+"""!
 
     This file is part of PiJoint.
 
-    @package Vision
+    @package pijoint_vision vision
     @author: Alessandro Mizzaro
-    @contact:
     @version: 1.0.0
 
-    OpenCV utils
 """
 from math import atan2, cos, pi, sin, sqrt
 import math
@@ -18,19 +16,26 @@ import numpy as np
 
 from enum import IntEnum
 
-DEFULT_HSV= (0,170,0)
-HSV_VALUE = {
+## Default mask value
+DEFULT_HSV= (0,170,0)  
+## violet mask value
+HSV_VALUE = { 
   3: (0,70,0)
 }
 
 class Ground(IntEnum):
+    """!
+    Ground enum
+    """
+    ## DOWN is class 0
     DOWN = 0
+    ## UP is class 1
     UP = 1
 
 
 
 def mask(img, hsvs): 
-    """
+    """!
     Return the mask of the image. The mask is the image with only the color of the object
     @param img: image
     @param hsvs: hsv values
@@ -44,7 +49,7 @@ def mask(img, hsvs):
 
 
 def drawAxis(img, p_, q_, colour, scale):
-    """
+    """!
     Utils function to draw an arrow with eigenvalues and eigenvectors. In place edit
     @param img: image
     @param p_: point
@@ -72,7 +77,7 @@ def drawAxis(img, p_, q_, colour, scale):
 
 
 class MegaBloks:
-    """
+    """!
     Class to manage the MegaBloks
 
     """
@@ -80,14 +85,25 @@ class MegaBloks:
     _TEMPLATE = os.path.dirname(__file__) + '/templates/piolino.jpg'
 
     def __init__(self, img, c) -> None:
+        """!
+        Constructor
+        @param img: image
+        @param c: class
+
+        """
+        ## Object class
         self.object, self.ground_position = c
+        ## Image
         self.img = img
+        ## Ground position
         self.ground = self.ground_position == Ground.DOWN
         hsvs = HSV_VALUE.get(self.object, DEFULT_HSV)
 
         
         cnts,_ = cv2.findContours(mask(img, hsvs), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnts = sorted(cnts, key=cv2.contourArea, reverse=True)
+
+        ## Contour
         self.cnt = cnts[0]
 
         self._calc_orientation()
@@ -95,7 +111,7 @@ class MegaBloks:
 
     
     def _calc_orientation(self):
-        """
+        """!
         Calculate the yaw angle of the object with mask and PCA method
 
         """
@@ -114,13 +130,17 @@ class MegaBloks:
         if angle < 0:
             angle = -(math.pi + angle)
 
+        ## Yaw angle
         self.yaw = angle
+        ## Eigenvectors
         self.eigenvectors = (eigenvectors[index, 0], eigenvectors[index, 1])
+        ## Eigenvalues
         self.eigenvalue = eigenvalues[index] 
+        ## Center
         self.center = (int(mean[0, 0]), int(mean[0, 1]))
 
     def sift(self):
-        """
+        """!
         Calculate the skeleton of the object with SIFT method
 
         """
@@ -137,18 +157,20 @@ class MegaBloks:
         matches = bf.match(t_descriptors,o_descriptors)
         matches = sorted(matches, key = lambda x:x.distance)
 
+        ## Skeleton
         self.skeleton = []
 
         for match in matches:
             x, y = o_keypoint[match.trainIdx].pt
             self.skeleton.append((x,y))
         
+        ## Piolino
         self.piolini = list(map(int, np.mean(self.skeleton, axis=0)))
         
     
     @property
     def debug_image(self):
-        """
+        """!
         Return the debug image with the skeleton and the orientation
         """
         img = self.img.copy()

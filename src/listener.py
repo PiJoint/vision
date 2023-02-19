@@ -1,32 +1,21 @@
 #!/usr/bin/env python
-"""
+"""!
 
     This file is part of PiJoint.
 
-    @package Vision
+    @package src
     @author: Alessandro Mizzaro
-    @contact:
     @version: 1.0.0
 
 """
-from functools import partial
-from threading import Lock
-
-import cv2
 import rospy
-
 import message_filters
-from std_msgs.msg import String
 from sensor_msgs.msg import Image, PointCloud2
-
-
 from pijoint_vision.msg import RGBD
 
 
-
-
 def init():
-    """
+    """!
     Init function
     Time synchronizer
     """

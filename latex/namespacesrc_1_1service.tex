@@ -1,0 +1,81 @@
+\hypertarget{namespacesrc_1_1service}{}\doxysection{src.\+service Namespace Reference}
+\label{namespacesrc_1_1service}\index{src.service@{src.service}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacesrc_1_1service_a1b10c504335cd811f3ce4fa0c1e8bb3e}{ground\+\_\+position}} (img)
+\begin{DoxyCompactList}\small\item\em Return the position of the block. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesrc_1_1service_aa68d180e8a321d2d69439263842208a5}{pose}} (img, ob\+\_\+c, point\+\_\+cloud, box)
+\begin{DoxyCompactList}\small\item\em Return the pose of the object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{namespacesrc_1_1service_a79d5af0b742289ccbb131edb7c7d853c}\label{namespacesrc_1_1service_a79d5af0b742289ccbb131edb7c7d853c}} 
+def \mbox{\hyperlink{namespacesrc_1_1service_a79d5af0b742289ccbb131edb7c7d853c}{object\+\_\+detection}} (req)
+\begin{DoxyCompactList}\small\item\em Service callback. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{namespacesrc_1_1service_a79c55cc4a2fde20ac7b1cb1e5e5cd609}\label{namespacesrc_1_1service_a79c55cc4a2fde20ac7b1cb1e5e5cd609}} 
+def \mbox{\hyperlink{namespacesrc_1_1service_a79c55cc4a2fde20ac7b1cb1e5e5cd609}{init}} ()
+\begin{DoxyCompactList}\small\item\em Init function Load listner and services. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacesrc_1_1service_afec80ca3b8e4ba0fdf37f1ae24fd523a}\label{namespacesrc_1_1service_afec80ca3b8e4ba0fdf37f1ae24fd523a}} 
+\mbox{\hyperlink{namespacesrc_1_1service_afec80ca3b8e4ba0fdf37f1ae24fd523a}{bridge}} = Cv\+Bridge()
+\begin{DoxyCompactList}\small\item\em Cv\+Bridge object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{namespacesrc_1_1service_aeb636e4930c1fbe30610e2d010ab1a9c}\label{namespacesrc_1_1service_aeb636e4930c1fbe30610e2d010ab1a9c}} 
+\mbox{\hyperlink{namespacesrc_1_1service_aeb636e4930c1fbe30610e2d010ab1a9c}{classifier}} = \mbox{\hyperlink{classpijoint__vision_1_1ai_1_1models_1_1Model}{Model}}(\textquotesingle{}src/models/last.\+pt\textquotesingle{}, 0.\+70)
+\begin{DoxyCompactList}\small\item\em Blok classifier. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{namespacesrc_1_1service_a7463ea6cc6168dcaf8687891d0c29b2c}\label{namespacesrc_1_1service_a7463ea6cc6168dcaf8687891d0c29b2c}} 
+\mbox{\hyperlink{namespacesrc_1_1service_a7463ea6cc6168dcaf8687891d0c29b2c}{up\+\_\+classifier}} = \mbox{\hyperlink{classpijoint__vision_1_1ai_1_1models_1_1Model}{Model}}(\textquotesingle{}src/models/up\+\_\+and\+\_\+down.\+pt\textquotesingle{}, 0.\+30)
+\begin{DoxyCompactList}\small\item\em Ground classifier. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file is part of Pi\+Joint. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacesrc_1_1service_a1b10c504335cd811f3ce4fa0c1e8bb3e}\label{namespacesrc_1_1service_a1b10c504335cd811f3ce4fa0c1e8bb3e}} 
+\index{src.service@{src.service}!ground\_position@{ground\_position}}
+\index{ground\_position@{ground\_position}!src.service@{src.service}}
+\doxysubsubsection{\texorpdfstring{ground\_position()}{ground\_position()}}
+{\footnotesize\ttfamily def src.\+service.\+ground\+\_\+position (\begin{DoxyParamCaption}\item[{}]{img }\end{DoxyParamCaption})}
+
+
+
+Return the position of the block. 
+
+
+\begin{DoxyItemize}
+\item 0 if it is on the side
+\item 1 if it is \char`\"{}naturally\char`\"{} on the ground
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em img} & image of the object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+: int 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacesrc_1_1service_aa68d180e8a321d2d69439263842208a5}\label{namespacesrc_1_1service_aa68d180e8a321d2d69439263842208a5}} 
+\index{src.service@{src.service}!pose@{pose}}
+\index{pose@{pose}!src.service@{src.service}}
+\doxysubsubsection{\texorpdfstring{pose()}{pose()}}
+{\footnotesize\ttfamily def src.\+service.\+pose (\begin{DoxyParamCaption}\item[{}]{img,  }\item[{}]{ob\+\_\+c,  }\item[{}]{point\+\_\+cloud,  }\item[{}]{box }\end{DoxyParamCaption})}
+
+
+
+Return the pose of the object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img} & image of the object \\
+\hline
+{\em ob\+\_\+c} & class of the object \\
+\hline
+{\em point\+\_\+cloud} & point cloud of the scene \\
+\hline
+{\em box} & bounding box of the object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+: Pose 
+\end{DoxyReturn}

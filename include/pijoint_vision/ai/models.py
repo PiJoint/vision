@@ -1,3 +1,14 @@
+#!/usr/bin/env python
+"""!
+
+    This file is part of PiJoint.
+
+    @package pijoint_vision ai
+    @author: Alessandro Mizzaro
+    @version: 1.0.0
+
+    CNN utils
+"""
 import random
 import enum
 from pathlib import Path
@@ -13,25 +24,39 @@ from yolov7.utils.general import check_img_size,   non_max_suppression,  \
 from .images import LoadImage
 
 class Model:
-    """
+    """!
     Yolov7 model implementation
     """
 
     def __init__(self, w, tresh, device='', augment=False) -> None:
-        self.augment = augment
-        self.tresh = tresh
-        self.device = select_device(device)
-        self.half = self.device.type != 'cpu'  # half precision only supported on CUDA
+        """!
+        @param w: model weights
+        @param tresh: detection treshold
+        @param device: device to use
+        @param augment: augment image
 
+        """
+
+        ## Augment image
+        self.augment = augment
+        ## Detection treshold
+        self.tresh = tresh
+        ## Device to use
+        self.device = select_device(device)
+        ## Half precision
+        self.half = self.device.type != 'cpu'  # half precision only supported on CUDA
+        ## Model
         self.model = attempt_load(w, map_location=self.device)  # load FP32 model
+        ## Stride
         self.stride = int(self.model.stride.max())  # model stride
+        ## Image size
         self.imgsz = check_img_size(640, s=self.stride)  # check img_size
 
         if self.half:
             self.model.half()  # to FP16
-
+        ## Class names
         self.names = self.model.module.names if hasattr(self.model, 'module') else self.model.names
-
+        ## Class colors
         self.colors = [[random.randint(0, 255) for _ in range(3)] for _ in self.names]
 
         if self.half:
@@ -40,7 +65,7 @@ class Model:
 
 
     def detect_object(self, source):
-        """
+        """!
         Detect object in image
         @param source: image path
         @return: list of detected objects
@@ -88,4 +113,11 @@ class Model:
         return ob
         
     def plot(self, img0, xyxy, cls):
+        """!
+        Plot detected object
+        @param img0: image
+        @param xyxy: box
+        @param cls: class
+
+        """
         plot_one_box(xyxy, img0, label=self.names[cls], color=self.colors[cls], line_thickness=1)

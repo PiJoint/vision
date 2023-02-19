@@ -1,0 +1,99 @@
+\hypertarget{namespacepijoint__vision_1_1vision_1_1opencv}{}\doxysection{pijoint\+\_\+vision.\+vision.\+opencv Namespace Reference}
+\label{namespacepijoint__vision_1_1vision_1_1opencv}\index{pijoint\_vision.vision.opencv@{pijoint\_vision.vision.opencv}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classpijoint__vision_1_1vision_1_1opencv_1_1Ground}{Ground}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classpijoint__vision_1_1vision_1_1opencv_1_1Ground}{Ground}} enum. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks}{Mega\+Bloks}}
+\begin{DoxyCompactList}\small\item\em Class to manage the \mbox{\hyperlink{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks}{Mega\+Bloks}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacepijoint__vision_1_1vision_1_1opencv_a3af5fe0f33c3e996e1c82f8c63bf9433}{mask}} (img, hsvs)
+\begin{DoxyCompactList}\small\item\em Return the mask of the image. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacepijoint__vision_1_1vision_1_1opencv_a93db205252b388624acf8c62e7b39b02}{draw\+Axis}} (img, p\+\_\+, q\+\_\+, colour, scale)
+\begin{DoxyCompactList}\small\item\em Utils function to draw an arrow with eigenvalues and eigenvectors. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacepijoint__vision_1_1vision_1_1opencv_a25fad6281ed0f70f0ce35c44025b4f45}\label{namespacepijoint__vision_1_1vision_1_1opencv_a25fad6281ed0f70f0ce35c44025b4f45}} 
+tuple \mbox{\hyperlink{namespacepijoint__vision_1_1vision_1_1opencv_a25fad6281ed0f70f0ce35c44025b4f45}{D\+E\+F\+U\+L\+T\+\_\+\+H\+SV}} = (0,170,0)
+\begin{DoxyCompactList}\small\item\em Default mask value. \end{DoxyCompactList}\item 
+dictionary \mbox{\hyperlink{namespacepijoint__vision_1_1vision_1_1opencv_a0448c7ef24d6bbd8ebe72b628003da7c}{H\+S\+V\+\_\+\+V\+A\+L\+UE}}
+\begin{DoxyCompactList}\small\item\em violet mask value \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}This file is part of PiJoint.
+
+@package pijoint_vision vision
+@author: Alessandro Mizzaro
+@version: 1.0.0
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacepijoint__vision_1_1vision_1_1opencv_a93db205252b388624acf8c62e7b39b02}\label{namespacepijoint__vision_1_1vision_1_1opencv_a93db205252b388624acf8c62e7b39b02}} 
+\index{pijoint\_vision.vision.opencv@{pijoint\_vision.vision.opencv}!drawAxis@{drawAxis}}
+\index{drawAxis@{drawAxis}!pijoint\_vision.vision.opencv@{pijoint\_vision.vision.opencv}}
+\doxysubsubsection{\texorpdfstring{drawAxis()}{drawAxis()}}
+{\footnotesize\ttfamily def pijoint\+\_\+vision.\+vision.\+opencv.\+draw\+Axis (\begin{DoxyParamCaption}\item[{}]{img,  }\item[{}]{p\+\_\+,  }\item[{}]{q\+\_\+,  }\item[{}]{colour,  }\item[{}]{scale }\end{DoxyParamCaption})}
+
+
+
+Utils function to draw an arrow with eigenvalues and eigenvectors. 
+
+In place edit 
+\begin{DoxyParams}{Parameters}
+{\em img} & image \\
+\hline
+{\em p\+\_\+} & point \\
+\hline
+{\em q\+\_\+} & point \\
+\hline
+{\em colour} & color \\
+\hline
+{\em scale} & scale \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacepijoint__vision_1_1vision_1_1opencv_a3af5fe0f33c3e996e1c82f8c63bf9433}\label{namespacepijoint__vision_1_1vision_1_1opencv_a3af5fe0f33c3e996e1c82f8c63bf9433}} 
+\index{pijoint\_vision.vision.opencv@{pijoint\_vision.vision.opencv}!mask@{mask}}
+\index{mask@{mask}!pijoint\_vision.vision.opencv@{pijoint\_vision.vision.opencv}}
+\doxysubsubsection{\texorpdfstring{mask()}{mask()}}
+{\footnotesize\ttfamily def pijoint\+\_\+vision.\+vision.\+opencv.\+mask (\begin{DoxyParamCaption}\item[{}]{img,  }\item[{}]{hsvs }\end{DoxyParamCaption})}
+
+
+
+Return the mask of the image. 
+
+The mask is the image with only the color of the object 
+\begin{DoxyParams}{Parameters}
+{\em img} & image \\
+\hline
+{\em hsvs} & hsv values \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+: mask 
+\end{DoxyReturn}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacepijoint__vision_1_1vision_1_1opencv_a0448c7ef24d6bbd8ebe72b628003da7c}\label{namespacepijoint__vision_1_1vision_1_1opencv_a0448c7ef24d6bbd8ebe72b628003da7c}} 
+\index{pijoint\_vision.vision.opencv@{pijoint\_vision.vision.opencv}!HSV\_VALUE@{HSV\_VALUE}}
+\index{HSV\_VALUE@{HSV\_VALUE}!pijoint\_vision.vision.opencv@{pijoint\_vision.vision.opencv}}
+\doxysubsubsection{\texorpdfstring{HSV\_VALUE}{HSV\_VALUE}}
+{\footnotesize\ttfamily dictionary pijoint\+\_\+vision.\+vision.\+opencv.\+H\+S\+V\+\_\+\+V\+A\+L\+UE}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{ }
+\DoxyCodeLine{2   3: (0,70,0)}
+\DoxyCodeLine{3 \}}
+
+\end{DoxyCode}
+
+
+violet mask value 
+
