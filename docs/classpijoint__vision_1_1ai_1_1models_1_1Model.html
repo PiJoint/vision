@@ -198,7 +198,43 @@ Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-
+<div class="fragment"><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">def </span>__init__(self, w, tresh, device=&#39;&#39;, augment=False) -&gt; None:</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;!</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="stringliteral">        @param w: model weights</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="stringliteral">        @param tresh: detection treshold</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="stringliteral">        @param device: device to use</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="stringliteral">        @param augment: augment image</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="stringliteral"></span> </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        self.augment = augment</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        self.tresh = tresh</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        self.device = select_device(device)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        self.half = self.device.type != <span class="stringliteral">&#39;cpu&#39;</span>  <span class="comment"># half precision only supported on CUDA</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        self.model = attempt_load(w, map_location=self.device)  <span class="comment"># load FP32 model</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        self.stride = int(self.model.stride.max())  <span class="comment"># model stride</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        self.imgsz = check_img_size(640, s=self.stride)  <span class="comment"># check img_size</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">if</span> self.half:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            self.model.half()  <span class="comment"># to FP16</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        self.names = self.model.module.names <span class="keywordflow">if</span> hasattr(self.model, <span class="stringliteral">&#39;module&#39;</span>) <span class="keywordflow">else</span> self.model.names</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        self.colors = [[random.randint(0, 255) <span class="keywordflow">for</span> _ <span class="keywordflow">in</span> range(3)] <span class="keywordflow">for</span> _ <span class="keywordflow">in</span> self.names]</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordflow">if</span> self.half:</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            self.model(torch.zeros(1, 3, self.imgsz, self.imgsz).to(device).type_as(next(self.model.parameters())))  <span class="comment"># run once</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+</div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -236,7 +272,55 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>: list of detected objects </dd></dl>
-
+<div class="fragment"><div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">def </span>detect_object(self, source):</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;!</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="stringliteral">        Detect object in image</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="stringliteral">        @param source: image path</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="stringliteral">        @return: list of detected objects</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        ob = []</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        dataset = LoadImage(source, img_size=self.imgsz, stride=self.stride)</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        old_img_w = old_img_h = self.imgsz</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        old_img_b = 1</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">for</span> path, img, im0s, _ <span class="keywordflow">in</span> dataset:</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            img = torch.from_numpy(img).to(self.device)</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            img = img.half() <span class="keywordflow">if</span> self.half <span class="keywordflow">else</span> img.float()  <span class="comment"># uint8 to fp16/32</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            img /= 255.0  <span class="comment"># 0 - 255 to 0.0 - 1.0</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="keywordflow">if</span> img.ndimension() == 3:</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                img = img.unsqueeze(0)</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="keywordflow">if</span> self.half <span class="keywordflow">and</span> (old_img_b != img.shape[0] <span class="keywordflow">or</span> old_img_h != img.shape[2] <span class="keywordflow">or</span> old_img_w != img.shape[3]):</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                old_img_b = img.shape[0]</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                old_img_h = img.shape[2]</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                old_img_w = img.shape[3]</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(3):</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                    self.model(img, augment=self.augment)[0]</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="keyword">with</span> torch.no_grad():   <span class="comment"># Calculating gradients would cause a GPU memory leak</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                pred = self.model(img, augment=self.augment)[0]</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            pred = non_max_suppression(pred, self.tresh, 0.45, classes=<span class="keywordtype">None</span>, agnostic=<span class="keyword">True</span>)</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <span class="keywordflow">for</span> i, det <span class="keywordflow">in</span> enumerate(pred):  <span class="comment"># detections per image</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                p, s, im0, frame = path, <span class="stringliteral">&#39;&#39;</span>, im0s, getattr(dataset, <span class="stringliteral">&#39;frame&#39;</span>, 0)</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                p = Path(p)  <span class="comment"># to Path</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                <span class="keywordflow">if</span> len(det):</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                    <span class="comment"># Rescale boxes from img_size to im0 size</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                    det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                    <span class="keywordflow">for</span> *xyxy, conf, cls <span class="keywordflow">in</span> reversed(det):</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                        label = f<span class="stringliteral">&#39;{self.names[int(cls)]} {conf:.2f}&#39;</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                        x, y,x1,y1 = xyxy</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                        ob.append(</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                            (int(cls), (int(x), int(y), int(x1), int(y1)), conf)</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                        )</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <span class="keywordflow">break</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keywordflow">return</span> ob</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        </div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="abc371cfc882f1ae09cdad8449d4d8f62"></a>
@@ -286,7 +370,16 @@ Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-
+<div class="fragment"><div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">def </span>plot(self, img0, xyxy, cls):</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;!</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="stringliteral">        Plot detected object</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="stringliteral">        @param img0: image</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="stringliteral">        @param xyxy: box</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="stringliteral">        @param cls: class</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="stringliteral"></span> </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        plot_one_box(xyxy, img0, label=self.names[cls], color=self.colors[cls], line_thickness=1)</div>
+</div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>

@@ -68,6 +68,46 @@ Yolov7 model implementation.
 \hline
 \end{DoxyParams}
 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{31     \textcolor{keyword}{def }\_\_init\_\_(self, w, tresh, device='', augment=False) -\/> None:}
+\DoxyCodeLine{32         \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{33 \textcolor{stringliteral}{        @param w: model weights}}
+\DoxyCodeLine{34 \textcolor{stringliteral}{        @param tresh: detection treshold}}
+\DoxyCodeLine{35 \textcolor{stringliteral}{        @param device: device to use}}
+\DoxyCodeLine{36 \textcolor{stringliteral}{        @param augment: augment image}}
+\DoxyCodeLine{37 \textcolor{stringliteral}{}}
+\DoxyCodeLine{38 \textcolor{stringliteral}{        """}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40         }
+\DoxyCodeLine{41         self.augment = augment}
+\DoxyCodeLine{42         }
+\DoxyCodeLine{43         self.tresh = tresh}
+\DoxyCodeLine{44         }
+\DoxyCodeLine{45         self.device = select\_device(device)}
+\DoxyCodeLine{46         }
+\DoxyCodeLine{47         self.half = self.device.type != \textcolor{stringliteral}{'cpu'}  \textcolor{comment}{\# half precision only supported on CUDA}}
+\DoxyCodeLine{48         }
+\DoxyCodeLine{49         self.model = attempt\_load(w, map\_location=self.device)  \textcolor{comment}{\# load FP32 model}}
+\DoxyCodeLine{50         }
+\DoxyCodeLine{51         self.stride = int(self.model.stride.max())  \textcolor{comment}{\# model stride}}
+\DoxyCodeLine{52         }
+\DoxyCodeLine{53         self.imgsz = check\_img\_size(640, s=self.stride)  \textcolor{comment}{\# check img\_size}}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55         \textcolor{keywordflow}{if} self.half:}
+\DoxyCodeLine{56             self.model.half()  \textcolor{comment}{\# to FP16}}
+\DoxyCodeLine{57         }
+\DoxyCodeLine{58         self.names = self.model.module.names \textcolor{keywordflow}{if} hasattr(self.model, \textcolor{stringliteral}{'module'}) \textcolor{keywordflow}{else} self.model.names}
+\DoxyCodeLine{59         }
+\DoxyCodeLine{60         self.colors = [[random.randint(0, 255) \textcolor{keywordflow}{for} \_ \textcolor{keywordflow}{in} range(3)] \textcolor{keywordflow}{for} \_ \textcolor{keywordflow}{in} self.names]}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62         \textcolor{keywordflow}{if} self.half:}
+\DoxyCodeLine{63             self.model(torch.zeros(1, 3, self.imgsz, self.imgsz).to(device).type\_as(next(self.model.parameters())))  \textcolor{comment}{\# run once}}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 }
+
+\end{DoxyCode}
+
 
 \doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{classpijoint__vision_1_1ai_1_1models_1_1Model_a47825a6509856308787339216a8ee90d}\label{classpijoint__vision_1_1ai_1_1models_1_1Model_a47825a6509856308787339216a8ee90d}} 
@@ -88,6 +128,58 @@ Detect object in image.
 \begin{DoxyReturn}{Returns}
 \+: list of detected objects 
 \end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{67     \textcolor{keyword}{def }detect\_object(self, source):}
+\DoxyCodeLine{68         \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{69 \textcolor{stringliteral}{        Detect object in image}}
+\DoxyCodeLine{70 \textcolor{stringliteral}{        @param source: image path}}
+\DoxyCodeLine{71 \textcolor{stringliteral}{        @return: list of detected objects}}
+\DoxyCodeLine{72 \textcolor{stringliteral}{        """}}
+\DoxyCodeLine{73         ob = []}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75         dataset = LoadImage(source, img\_size=self.imgsz, stride=self.stride)}
+\DoxyCodeLine{76         old\_img\_w = old\_img\_h = self.imgsz}
+\DoxyCodeLine{77         old\_img\_b = 1}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79         \textcolor{keywordflow}{for} path, img, im0s, \_ \textcolor{keywordflow}{in} dataset:}
+\DoxyCodeLine{80             img = torch.from\_numpy(img).to(self.device)}
+\DoxyCodeLine{81             img = img.half() \textcolor{keywordflow}{if} self.half \textcolor{keywordflow}{else} img.float()  \textcolor{comment}{\# uint8 to fp16/32}}
+\DoxyCodeLine{82             img /= 255.0  \textcolor{comment}{\# 0 -\/ 255 to 0.0 -\/ 1.0}}
+\DoxyCodeLine{83             \textcolor{keywordflow}{if} img.ndimension() == 3:}
+\DoxyCodeLine{84                 img = img.unsqueeze(0)}
+\DoxyCodeLine{85             }
+\DoxyCodeLine{86             \textcolor{keywordflow}{if} self.half \textcolor{keywordflow}{and} (old\_img\_b != img.shape[0] \textcolor{keywordflow}{or} old\_img\_h != img.shape[2] \textcolor{keywordflow}{or} old\_img\_w != img.shape[3]):}
+\DoxyCodeLine{87                 old\_img\_b = img.shape[0]}
+\DoxyCodeLine{88                 old\_img\_h = img.shape[2]}
+\DoxyCodeLine{89                 old\_img\_w = img.shape[3]}
+\DoxyCodeLine{90                 \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(3):}
+\DoxyCodeLine{91                     self.model(img, augment=self.augment)[0]}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{93             \textcolor{keyword}{with} torch.no\_grad():   \textcolor{comment}{\# Calculating gradients would cause a GPU memory leak}}
+\DoxyCodeLine{94                 pred = self.model(img, augment=self.augment)[0]}
+\DoxyCodeLine{95             }
+\DoxyCodeLine{96             pred = non\_max\_suppression(pred, self.tresh, 0.45, classes=\textcolor{keywordtype}{None}, agnostic=\textcolor{keyword}{True})}
+\DoxyCodeLine{97             \textcolor{keywordflow}{for} i, det \textcolor{keywordflow}{in} enumerate(pred):  \textcolor{comment}{\# detections per image}}
+\DoxyCodeLine{98                 p, s, im0, frame = path, \textcolor{stringliteral}{''}, im0s, getattr(dataset, \textcolor{stringliteral}{'frame'}, 0)}
+\DoxyCodeLine{99 }
+\DoxyCodeLine{100                 p = Path(p)  \textcolor{comment}{\# to Path}}
+\DoxyCodeLine{101                 }
+\DoxyCodeLine{102                 \textcolor{keywordflow}{if} len(det):}
+\DoxyCodeLine{103                     \textcolor{comment}{\# Rescale boxes from img\_size to im0 size}}
+\DoxyCodeLine{104                     det[:, :4] = scale\_coords(img.shape[2:], det[:, :4], im0.shape).round()}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106                     \textcolor{keywordflow}{for} *xyxy, conf, cls \textcolor{keywordflow}{in} reversed(det):}
+\DoxyCodeLine{107                         label = f\textcolor{stringliteral}{'\{self.names[int(cls)]\} \{conf:.2f\}'}}
+\DoxyCodeLine{108                         x, y,x1,y1 = xyxy}
+\DoxyCodeLine{109                         ob.append(}
+\DoxyCodeLine{110                             (int(cls), (int(x), int(y), int(x1), int(y1)), conf)}
+\DoxyCodeLine{111                         )}
+\DoxyCodeLine{112             \textcolor{keywordflow}{break}}
+\DoxyCodeLine{113         \textcolor{keywordflow}{return} ob}
+\DoxyCodeLine{114         }
+
+\end{DoxyCode}
 \mbox{\Hypertarget{classpijoint__vision_1_1ai_1_1models_1_1Model_abc371cfc882f1ae09cdad8449d4d8f62}\label{classpijoint__vision_1_1ai_1_1models_1_1Model_abc371cfc882f1ae09cdad8449d4d8f62}} 
 \index{pijoint\_vision.ai.models.Model@{pijoint\_vision.ai.models.Model}!plot@{plot}}
 \index{plot@{plot}!pijoint\_vision.ai.models.Model@{pijoint\_vision.ai.models.Model}}
@@ -107,6 +199,19 @@ Plot detected object.
 {\em cls} & class \\
 \hline
 \end{DoxyParams}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{115     \textcolor{keyword}{def }plot(self, img0, xyxy, cls):}
+\DoxyCodeLine{116         \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{117 \textcolor{stringliteral}{        Plot detected object}}
+\DoxyCodeLine{118 \textcolor{stringliteral}{        @param img0: image}}
+\DoxyCodeLine{119 \textcolor{stringliteral}{        @param xyxy: box}}
+\DoxyCodeLine{120 \textcolor{stringliteral}{        @param cls: class}}
+\DoxyCodeLine{121 \textcolor{stringliteral}{}}
+\DoxyCodeLine{122 \textcolor{stringliteral}{        """}}
+\DoxyCodeLine{123         plot\_one\_box(xyxy, img0, label=self.names[cls], color=self.colors[cls], line\_thickness=1)}
+
+\end{DoxyCode}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

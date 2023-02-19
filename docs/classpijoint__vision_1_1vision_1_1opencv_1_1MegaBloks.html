@@ -84,8 +84,6 @@ $(document).ready(function(){initNavTree('classpijoint__vision_1_1vision_1_1open
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
-<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">pijoint_vision.vision.opencv.MegaBloks Class Reference</div>  </div>
@@ -150,18 +148,6 @@ Public Attributes</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks.html#a590d359d3edc151e576e54470399f3b2">piolini</a></td></tr>
 <tr class="memdesc:a590d359d3edc151e576e54470399f3b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Piolino. <br /></td></tr>
 <tr class="separator:a590d359d3edc151e576e54470399f3b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:a4dd7b50836feeb7326a761960735b0b9"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks.html#a4dd7b50836feeb7326a761960735b0b9">_calc_orientation</a> (self)</td></tr>
-<tr class="memdesc:a4dd7b50836feeb7326a761960735b0b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the yaw angle of the object with mask and PCA method.  <a href="classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks.html#a4dd7b50836feeb7326a761960735b0b9">More...</a><br /></td></tr>
-<tr class="separator:a4dd7b50836feeb7326a761960735b0b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
-Static Private Attributes</h2></td></tr>
-<tr class="memitem:a028fc871333108605734f33272967787"><td class="memItemLeft" align="right" valign="top"><a id="a028fc871333108605734f33272967787"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>_TEMPLATE</b> = os.path.dirname(__file__) + '/templates/piolino.jpg'</td></tr>
-<tr class="separator:a028fc871333108605734f33272967787"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class to manage the <a class="el" href="classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks.html" title="Class to manage the MegaBloks.">MegaBloks</a>. </p>
@@ -206,38 +192,36 @@ string&#160;</td><td class="memItemRight" valign="bottom"><b>_TEMPLATE</b> = os.
   </table>
   </dd>
 </dl>
-
+<div class="fragment"><div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">def </span>__init__(self, img, c) -&gt; None:</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;!</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="stringliteral">        Constructor</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="stringliteral">        @param img: image</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="stringliteral">        @param c: class</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="stringliteral"></span> </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        self.object, self.ground_position = c</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        self.img = img</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        self.ground = self.ground_position == Ground.DOWN</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        hsvs = HSV_VALUE.get(self.object, DEFULT_HSV)</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        cnts,_ = cv2.findContours(mask(img, hsvs), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        cnts = sorted(cnts, key=cv2.contourArea, reverse=<span class="keyword">True</span>)</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        self.cnt = cnts[0]</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        self._calc_orientation()</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        self.sift()</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    </div>
+</div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4dd7b50836feeb7326a761960735b0b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4dd7b50836feeb7326a761960735b0b9">&#9670;&nbsp;</a></span>_calc_orientation()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">def pijoint_vision.vision.opencv.MegaBloks._calc_orientation </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calculate the yaw angle of the object with mask and PCA method. </p>
-
-</div>
-</div>
 <a id="aa50c8945de5fba2cc5b4d2914a309c2b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa50c8945de5fba2cc5b4d2914a309c2b">&#9670;&nbsp;</a></span>sift()</h2>
 
@@ -255,7 +239,36 @@ string&#160;</td><td class="memItemRight" valign="bottom"><b>_TEMPLATE</b> = os.
 </div><div class="memdoc">
 
 <p>Calculate the skeleton of the object with SIFT method. </p>
-
+<div class="fragment"><div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keyword">def </span>sift(self):</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;!</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="stringliteral">        Calculate the skeleton of the object with SIFT method</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="stringliteral"></span> </div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        template = cv2.imread(self._TEMPLATE)</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        sift = cv2.xfeatures2d.SIFT_create()</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        block = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        t_keypoint, t_descriptors = sift.detectAndCompute(template, <span class="keywordtype">None</span>)</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        o_keypoint, o_descriptors = sift.detectAndCompute(block, <span class="keywordtype">None</span>)</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=<span class="keyword">True</span>)</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        matches = bf.match(t_descriptors,o_descriptors)</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        matches = sorted(matches, key = <span class="keyword">lambda</span> x:x.distance)</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        </div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        self.skeleton = []</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="keywordflow">for</span> match <span class="keywordflow">in</span> matches:</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;            x, y = o_keypoint[match.trainIdx].pt</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;            self.skeleton.append((x,y))</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        </div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        self.piolini = list(map(int, np.mean(self.skeleton, axis=0)))</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        </div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    </div>
+</div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>

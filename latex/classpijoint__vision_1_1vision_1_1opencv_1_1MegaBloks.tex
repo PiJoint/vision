@@ -48,17 +48,6 @@ def \mbox{\hyperlink{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks_ade8d
 \mbox{\Hypertarget{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks_a590d359d3edc151e576e54470399f3b2}\label{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks_a590d359d3edc151e576e54470399f3b2}} 
 \mbox{\hyperlink{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks_a590d359d3edc151e576e54470399f3b2}{piolini}}
 \begin{DoxyCompactList}\small\item\em Piolino. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Private Member Functions}
-\begin{DoxyCompactItemize}
-\item 
-def \mbox{\hyperlink{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks_a4dd7b50836feeb7326a761960735b0b9}{\+\_\+calc\+\_\+orientation}} (self)
-\begin{DoxyCompactList}\small\item\em Calculate the yaw angle of the object with mask and P\+CA method. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Static Private Attributes}
-\begin{DoxyCompactItemize}
-\item 
-\mbox{\Hypertarget{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks_a028fc871333108605734f33272967787}\label{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks_a028fc871333108605734f33272967787}} 
-string {\bfseries \+\_\+\+T\+E\+M\+P\+L\+A\+TE} = os.\+path.\+dirname(\+\_\+\+\_\+file\+\_\+\+\_\+) + \textquotesingle{}/templates/piolino.\+jpg\textquotesingle{}
-\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -85,18 +74,38 @@ Constructor.
 \hline
 \end{DoxyParams}
 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{87     \textcolor{keyword}{def }\_\_init\_\_(self, img, c) -\/> None:}
+\DoxyCodeLine{88         \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{89 \textcolor{stringliteral}{        Constructor}}
+\DoxyCodeLine{90 \textcolor{stringliteral}{        @param img: image}}
+\DoxyCodeLine{91 \textcolor{stringliteral}{        @param c: class}}
+\DoxyCodeLine{92 \textcolor{stringliteral}{}}
+\DoxyCodeLine{93 \textcolor{stringliteral}{        """}}
+\DoxyCodeLine{94         }
+\DoxyCodeLine{95         self.object, self.ground\_position = c}
+\DoxyCodeLine{96         }
+\DoxyCodeLine{97         self.img = img}
+\DoxyCodeLine{98         }
+\DoxyCodeLine{99         self.ground = self.ground\_position == Ground.DOWN}
+\DoxyCodeLine{100         hsvs = HSV\_VALUE.get(self.object, DEFULT\_HSV)}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{102         }
+\DoxyCodeLine{103         cnts,\_ = cv2.findContours(mask(img, hsvs), cv2.RETR\_EXTERNAL, cv2.CHAIN\_APPROX\_SIMPLE)}
+\DoxyCodeLine{104         cnts = sorted(cnts, key=cv2.contourArea, reverse=\textcolor{keyword}{True})}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106         }
+\DoxyCodeLine{107         self.cnt = cnts[0]}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109         self.\_calc\_orientation()}
+\DoxyCodeLine{110         self.sift()}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{112     }
+
+\end{DoxyCode}
+
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks_a4dd7b50836feeb7326a761960735b0b9}\label{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks_a4dd7b50836feeb7326a761960735b0b9}} 
-\index{pijoint\_vision.vision.opencv.MegaBloks@{pijoint\_vision.vision.opencv.MegaBloks}!\_calc\_orientation@{\_calc\_orientation}}
-\index{\_calc\_orientation@{\_calc\_orientation}!pijoint\_vision.vision.opencv.MegaBloks@{pijoint\_vision.vision.opencv.MegaBloks}}
-\doxysubsubsection{\texorpdfstring{\_calc\_orientation()}{\_calc\_orientation()}}
-{\footnotesize\ttfamily def pijoint\+\_\+vision.\+vision.\+opencv.\+Mega\+Bloks.\+\_\+calc\+\_\+orientation (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Calculate the yaw angle of the object with mask and P\+CA method. 
-
 \mbox{\Hypertarget{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks_aa50c8945de5fba2cc5b4d2914a309c2b}\label{classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks_aa50c8945de5fba2cc5b4d2914a309c2b}} 
 \index{pijoint\_vision.vision.opencv.MegaBloks@{pijoint\_vision.vision.opencv.MegaBloks}!sift@{sift}}
 \index{sift@{sift}!pijoint\_vision.vision.opencv.MegaBloks@{pijoint\_vision.vision.opencv.MegaBloks}}
@@ -107,6 +116,39 @@ Calculate the yaw angle of the object with mask and P\+CA method.
 
 Calculate the skeleton of the object with S\+I\+FT method. 
 
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{142     \textcolor{keyword}{def }sift(self):}
+\DoxyCodeLine{143         \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{144 \textcolor{stringliteral}{        Calculate the skeleton of the object with SIFT method}}
+\DoxyCodeLine{145 \textcolor{stringliteral}{}}
+\DoxyCodeLine{146 \textcolor{stringliteral}{        """}}
+\DoxyCodeLine{147         template = cv2.imread(self.\_TEMPLATE)}
+\DoxyCodeLine{148         sift = cv2.xfeatures2d.SIFT\_create()}
+\DoxyCodeLine{149 }
+\DoxyCodeLine{150         block = cv2.cvtColor(self.img, cv2.COLOR\_BGR2GRAY)}
+\DoxyCodeLine{151         template = cv2.cvtColor(template, cv2.COLOR\_BGR2GRAY)}
+\DoxyCodeLine{152 }
+\DoxyCodeLine{153         t\_keypoint, t\_descriptors = sift.detectAndCompute(template, \textcolor{keywordtype}{None})}
+\DoxyCodeLine{154         o\_keypoint, o\_descriptors = sift.detectAndCompute(block, \textcolor{keywordtype}{None})}
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156         bf = cv2.BFMatcher(cv2.NORM\_L1, crossCheck=\textcolor{keyword}{True})}
+\DoxyCodeLine{157         matches = bf.match(t\_descriptors,o\_descriptors)}
+\DoxyCodeLine{158         matches = sorted(matches, key = \textcolor{keyword}{lambda} x:x.distance)}
+\DoxyCodeLine{159 }
+\DoxyCodeLine{160         }
+\DoxyCodeLine{161         self.skeleton = []}
+\DoxyCodeLine{162 }
+\DoxyCodeLine{163         \textcolor{keywordflow}{for} match \textcolor{keywordflow}{in} matches:}
+\DoxyCodeLine{164             x, y = o\_keypoint[match.trainIdx].pt}
+\DoxyCodeLine{165             self.skeleton.append((x,y))}
+\DoxyCodeLine{166         }
+\DoxyCodeLine{167         }
+\DoxyCodeLine{168         self.piolini = list(map(int, np.mean(self.skeleton, axis=0)))}
+\DoxyCodeLine{169         }
+\DoxyCodeLine{170     }
+
+\end{DoxyCode}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

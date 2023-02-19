@@ -76,6 +76,31 @@ Extends Load\+Images class Source loader for single image.
 \hline
 \end{DoxyParams}
 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{21     \textcolor{keyword}{def }\_\_init\_\_(self, im0s, img\_size=640, stride=32):}
+\DoxyCodeLine{22         \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{23 \textcolor{stringliteral}{        @param im0s: image path}}
+\DoxyCodeLine{24 \textcolor{stringliteral}{        @param img\_size: image size}}
+\DoxyCodeLine{25 \textcolor{stringliteral}{        @param stride: stride}}
+\DoxyCodeLine{26 \textcolor{stringliteral}{        """}}
+\DoxyCodeLine{27         }
+\DoxyCodeLine{28         self.img\_size = img\_size }
+\DoxyCodeLine{29         }
+\DoxyCodeLine{30         }
+\DoxyCodeLine{31         self.stride = stride}
+\DoxyCodeLine{32         }
+\DoxyCodeLine{33         self.files = [im0s]}
+\DoxyCodeLine{34         }
+\DoxyCodeLine{35         self.nf = len(im0s)}
+\DoxyCodeLine{36         }
+\DoxyCodeLine{37         self.video\_flag = [\textcolor{keyword}{False}] * self.nf}
+\DoxyCodeLine{38         }
+\DoxyCodeLine{39         self.mode = \textcolor{stringliteral}{'image'}}
+\DoxyCodeLine{40     }
+\DoxyCodeLine{41 }
+
+\end{DoxyCode}
+
 
 \doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{classpijoint__vision_1_1ai_1_1images_1_1LoadImage_a6dc1b08664da381a29ed108ec5008631}\label{classpijoint__vision_1_1ai_1_1images_1_1LoadImage_a6dc1b08664da381a29ed108ec5008631}} 
@@ -91,6 +116,38 @@ Get next image.
 \begin{DoxyReturn}{Returns}
 \+: image 
 \end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{42     \textcolor{keyword}{def }\_\_next\_\_(self):}
+\DoxyCodeLine{43         \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{44 \textcolor{stringliteral}{        Get next image}}
+\DoxyCodeLine{45 \textcolor{stringliteral}{        @return: image}}
+\DoxyCodeLine{46 \textcolor{stringliteral}{}}
+\DoxyCodeLine{47 \textcolor{stringliteral}{        """}}
+\DoxyCodeLine{48         \textcolor{keywordflow}{if} self.count == self.nf:}
+\DoxyCodeLine{49             \textcolor{keywordflow}{raise} StopIteration}
+\DoxyCodeLine{50         img0 = self.files[self.count]}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52        }
+\DoxyCodeLine{53             \textcolor{comment}{\# Read image}}
+\DoxyCodeLine{54         self.count += 1}
+\DoxyCodeLine{55         }
+\DoxyCodeLine{56         \textcolor{keyword}{assert} img0 \textcolor{keywordflow}{is} \textcolor{keywordflow}{not} \textcolor{keywordtype}{None}, \textcolor{stringliteral}{'Image Not Found '}}
+\DoxyCodeLine{57             \textcolor{comment}{\#print(f'image \{self.count\}/\{self.nf\} \{path\}: ', end='')}}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59         \textcolor{comment}{\# Padded resize}}
+\DoxyCodeLine{60         img = letterbox(img0, self.img\_size, stride=self.stride)[0]}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62         \textcolor{comment}{\# Convert}}
+\DoxyCodeLine{63         img = img[:, :, ::-\/1].transpose(2, 0, 1)  \textcolor{comment}{\# BGR to RGB, to 3x416x416}}
+\DoxyCodeLine{64         img = np.ascontiguousarray(img)}
+\DoxyCodeLine{65         \textcolor{keywordflow}{return} \textcolor{stringliteral}{'tmp'}, img, img0, \textcolor{keywordtype}{None}}
+\DoxyCodeLine{66 }
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69 }
+
+\end{DoxyCode}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

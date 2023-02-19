@@ -57,6 +57,38 @@ In place edit
 {\em scale} & scale \\
 \hline
 \end{DoxyParams}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{51 \textcolor{keyword}{def }drawAxis(img, p\_, q\_, colour, scale):}
+\DoxyCodeLine{52     \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{53 \textcolor{stringliteral}{    Utils function to draw an arrow with eigenvalues and eigenvectors. In place edit}}
+\DoxyCodeLine{54 \textcolor{stringliteral}{    @param img: image}}
+\DoxyCodeLine{55 \textcolor{stringliteral}{    @param p\_: point}}
+\DoxyCodeLine{56 \textcolor{stringliteral}{    @param q\_: point}}
+\DoxyCodeLine{57 \textcolor{stringliteral}{    @param colour: color}}
+\DoxyCodeLine{58 \textcolor{stringliteral}{    @param scale: scale}}
+\DoxyCodeLine{59 \textcolor{stringliteral}{    """}}
+\DoxyCodeLine{60     p = list(p\_)}
+\DoxyCodeLine{61     q = list(q\_)}
+\DoxyCodeLine{62     }
+\DoxyCodeLine{63     angle = atan2(p[1] -\/ q[1], p[0] -\/ q[0]) \textcolor{comment}{\# angle in radians}}
+\DoxyCodeLine{64     hypotenuse = sqrt((p[1] -\/ q[1]) * (p[1] -\/ q[1]) + (p[0] -\/ q[0]) * (p[0] -\/ q[0]))}
+\DoxyCodeLine{65     \textcolor{comment}{\# Here we lengthen the arrow by a factor of scale}}
+\DoxyCodeLine{66     q[0] = p[0] -\/ scale * hypotenuse * cos(angle)}
+\DoxyCodeLine{67     q[1] = p[1] -\/ scale * hypotenuse * sin(angle)}
+\DoxyCodeLine{68     cv2.line(img, (int(p[0]), int(p[1])), (int(q[0]), int(q[1])), colour, 1, cv2.LINE\_AA)}
+\DoxyCodeLine{69     \textcolor{comment}{\# create the arrow hooks}}
+\DoxyCodeLine{70     p[0] = q[0] + 9 * cos(angle + pi / 4)}
+\DoxyCodeLine{71     p[1] = q[1] + 9 * sin(angle + pi / 4)}
+\DoxyCodeLine{72     cv2.line(img, (int(p[0]), int(p[1])), (int(q[0]), int(q[1])), colour, 1, cv2.LINE\_AA)}
+\DoxyCodeLine{73     p[0] = q[0] + 9 * cos(angle -\/ pi / 4)}
+\DoxyCodeLine{74     p[1] = q[1] + 9 * sin(angle -\/ pi / 4)}
+\DoxyCodeLine{75     cv2.line(img, (int(p[0]), int(p[1])), (int(q[0]), int(q[1])), colour, 1, cv2.LINE\_AA)}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 }
+
+\end{DoxyCode}
 \mbox{\Hypertarget{namespacepijoint__vision_1_1vision_1_1opencv_a3af5fe0f33c3e996e1c82f8c63bf9433}\label{namespacepijoint__vision_1_1vision_1_1opencv_a3af5fe0f33c3e996e1c82f8c63bf9433}} 
 \index{pijoint\_vision.vision.opencv@{pijoint\_vision.vision.opencv}!mask@{mask}}
 \index{mask@{mask}!pijoint\_vision.vision.opencv@{pijoint\_vision.vision.opencv}}
@@ -77,6 +109,24 @@ The mask is the image with only the color of the object
 \begin{DoxyReturn}{Returns}
 \+: mask 
 \end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{37 \textcolor{keyword}{def }mask(img, hsvs): }
+\DoxyCodeLine{38     \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{39 \textcolor{stringliteral}{    Return the mask of the image. The mask is the image with only the color of the object}}
+\DoxyCodeLine{40 \textcolor{stringliteral}{    @param img: image}}
+\DoxyCodeLine{41 \textcolor{stringliteral}{    @param hsvs: hsv values}}
+\DoxyCodeLine{42 \textcolor{stringliteral}{    @return: mask}}
+\DoxyCodeLine{43 \textcolor{stringliteral}{}}
+\DoxyCodeLine{44 \textcolor{stringliteral}{    """}}
+\DoxyCodeLine{45     hsv = cv2.cvtColor(img, cv2.COLOR\_BGR2HSV)}
+\DoxyCodeLine{46     lower = np.array([hsvs[0], hsvs[1], hsvs[2]])}
+\DoxyCodeLine{47     upper = np.array([179, 255, 255])}
+\DoxyCodeLine{48     \textcolor{keywordflow}{return} cv2.inRange(hsv, lower, upper)}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50 }
+
+\end{DoxyCode}
 
 
 \doxysubsection{Variable Documentation}

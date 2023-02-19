@@ -55,6 +55,41 @@ Return the position of the block.
 \begin{DoxyReturn}{Returns}
 \+: int 
 \end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{44 \textcolor{keyword}{def }ground\_position(img):}
+\DoxyCodeLine{45     \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{46 \textcolor{stringliteral}{    Return the position of the block}}
+\DoxyCodeLine{47 \textcolor{stringliteral}{      -\/ 0 if it is on the side}}
+\DoxyCodeLine{48 \textcolor{stringliteral}{      -\/ 1 if it is "naturally" on the ground}}
+\DoxyCodeLine{49 \textcolor{stringliteral}{}}
+\DoxyCodeLine{50 \textcolor{stringliteral}{    @param img: image of the object}}
+\DoxyCodeLine{51 \textcolor{stringliteral}{    @return: int}}
+\DoxyCodeLine{52 \textcolor{stringliteral}{    """}}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54     \textcolor{keyword}{def }area(x,y):}
+\DoxyCodeLine{55         \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{56 \textcolor{stringliteral}{        Return the area of the polygon defined by the points}}
+\DoxyCodeLine{57 \textcolor{stringliteral}{        @param x: list of x coordinates}}
+\DoxyCodeLine{58 \textcolor{stringliteral}{        @param y: list of y coordinates}}
+\DoxyCodeLine{59 \textcolor{stringliteral}{        @return: float}}
+\DoxyCodeLine{60 \textcolor{stringliteral}{        """}}
+\DoxyCodeLine{61         \textcolor{keywordflow}{return} float(0.5*np.abs(np.dot(x,np.roll(y,1))-\/np.dot(y,np.roll(x,1))))}
+\DoxyCodeLine{62     }
+\DoxyCodeLine{63     ob = up\_classifier.detect\_object(img)}
+\DoxyCodeLine{64     matches = sorted([}
+\DoxyCodeLine{65         (c, area(}
+\DoxyCodeLine{66             (box[0], box[2]), (box[1], box[3])}
+\DoxyCodeLine{67         ), conf) \textcolor{keywordflow}{for} c,box, conf \textcolor{keywordflow}{in} ob}
+\DoxyCodeLine{68     ], reverse=\textcolor{keyword}{True}, key=\textcolor{keyword}{lambda} x: (x[1], x[2]) )}
+\DoxyCodeLine{69     \textcolor{keywordflow}{if} len(matches) > 0:}
+\DoxyCodeLine{70         \textcolor{keywordflow}{return} matches[0][0]}
+\DoxyCodeLine{71     \textcolor{keywordflow}{else}: }
+\DoxyCodeLine{72         \textcolor{keywordtype}{None}}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74 }
+
+\end{DoxyCode}
 \mbox{\Hypertarget{namespacesrc_1_1service_aa68d180e8a321d2d69439263842208a5}\label{namespacesrc_1_1service_aa68d180e8a321d2d69439263842208a5}} 
 \index{src.service@{src.service}!pose@{pose}}
 \index{pose@{pose}!src.service@{src.service}}
@@ -79,3 +114,33 @@ Return the pose of the object.
 \begin{DoxyReturn}{Returns}
 \+: Pose 
 \end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{75 \textcolor{keyword}{def }pose(img, ob\_c, point\_cloud, box):}
+\DoxyCodeLine{76     \textcolor{stringliteral}{"""!}}
+\DoxyCodeLine{77 \textcolor{stringliteral}{    Return the pose of the object}}
+\DoxyCodeLine{78 \textcolor{stringliteral}{}}
+\DoxyCodeLine{79 \textcolor{stringliteral}{    @param img: image of the object}}
+\DoxyCodeLine{80 \textcolor{stringliteral}{    @param ob\_c: class of the object}}
+\DoxyCodeLine{81 \textcolor{stringliteral}{    @param point\_cloud: point cloud of the scene}}
+\DoxyCodeLine{82 \textcolor{stringliteral}{    @param box: bounding box of the object}}
+\DoxyCodeLine{83 \textcolor{stringliteral}{    @return: Pose}}
+\DoxyCodeLine{84 \textcolor{stringliteral}{    """}}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86     x,y,x1,y1  = box}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{88     cropped = img[int(y):int(y1), int(x):int(x1)]}
+\DoxyCodeLine{89     blok = MegaBloks(cropped, (ob\_c, ground\_position(cropped)))}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{91     (cx, cy) = blok.center}
+\DoxyCodeLine{92     (tx, ty) = blok.piolini}
+\DoxyCodeLine{93     px,py,pz = pixel2cloud(point\_cloud, cx+x,cy+y)}
+\DoxyCodeLine{94     tx,ty,tz = pixel2cloud(point\_cloud, tx+x,ty+y)}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96     \textcolor{keywordflow}{return} Pose(}
+\DoxyCodeLine{97         Point(*trw(px,py,pz)),Point(*trw(tx,ty,tz)), blok.yaw, blok.ground}
+\DoxyCodeLine{98     ), blok.debug\_image}
+\DoxyCodeLine{99 }
+\DoxyCodeLine{100 }
+
+\end{DoxyCode}

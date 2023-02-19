@@ -1,7 +1,6 @@
 var classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks =
 [
     [ "__init__", "classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks.html#a5379925767cabe15b9de4498a2f47e30", null ],
-    [ "_calc_orientation", "classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks.html#a4dd7b50836feeb7326a761960735b0b9", null ],
     [ "debug_image", "classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks.html#ade8d7e435a76757ba3f577a738cfa692", null ],
     [ "sift", "classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks.html#aa50c8945de5fba2cc5b4d2914a309c2b", null ],
     [ "center", "classpijoint__vision_1_1vision_1_1opencv_1_1MegaBloks.html#a6c08c0aaf1ee57731295512bb2d19e3f", null ],
