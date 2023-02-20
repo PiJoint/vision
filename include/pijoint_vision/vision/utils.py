@@ -24,10 +24,10 @@ if SIMULAZIONE:
 else:
     ## Rotation matrix from camera to robot frame
     ro = np.array(
-        [[0.4995,0,0.8663], [0,-1,0], [0.8663,0,-0.4995]]
+        [[0.8596,0.1581,-0.4859], [-0.1194,0.9867,0.1099], [0.4969,-0.0364,0.8671]]
     )
     ## Translation vector from camera to robot frame
-    tau = np.array([-0.90, -0.15, 0.35],
+    tau = np.array([-0.9030, -0.2290, 0.4890],
     
     ).reshape((3,1))
 
